@@ -4,6 +4,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import psycopg2
 import yfinance as yf
+import requests
 
 load_dotenv()
 app = Flask(__name__)
@@ -158,6 +159,32 @@ def get_owned_stocks():
     except:
         print("Error retrieving list of owned stocks")
         return jsonify({"error": "Cannot retrieve owned stock"})
+    
+# Retrieve list of owned stock
+@app.route('/portfolio_value', methods=['GET'])
+def get_portfolio_value():
+    user_id = request.args.get("user_id")
+    try:
+        response = requests.get('http://127.0.0.1:5000/owned_stocks?user_id=' + user_id)
+        portfolio_value = 0
+        if response.status_code == 200:
+            # get list of owned stocks
+            owned_stock = response.json()
+
+            # calculate total portfolio value
+            for pair in owned_stock:
+                # get current price of stock
+                stock, shares = pair[0], pair[1]
+                response = requests.get('http://127.0.0.1:5000/search_stock?symbol=' + stock)
+                stock_data = response.json()
+                current_price = stock_data.get("current_price")
+                stock_value = float(shares) * float(current_price)
+                portfolio_value += stock_value
+            
+        return jsonify({"portfolio_value":portfolio_value})
+    except:
+        print("Error retrieving total portfolio value")
+        return jsonify({"error": "Cannot retrieve total portfolio value"})
 
 if __name__ == '__main__':
     app.run(debug=True)
