@@ -120,6 +120,44 @@ def create_order():
     except:
         print("Error placing order")
         return jsonify({"error": "Cannot place order"})
+    
+# Retrieve list of owned stock
+@app.route('/owned_stocks', methods=['GET'])
+def get_owned_stocks():
+    user_id = request.args.get("user_id")
+    try:
+        # create query to get user's list of owned stocks
+        owned_stock_query = """
+        SELECT 
+            stock,
+            SUM(CASE WHEN purchase_type = 'buy' THEN share_count 
+                    WHEN purchase_type = 'sell' THEN -share_count 
+                    ELSE 0 END) AS net_shares
+        FROM 
+            order_history
+        WHERE 
+            user_id = %s
+        GROUP BY 
+            stock
+        HAVING 
+            SUM(CASE WHEN purchase_type = 'buy' THEN share_count 
+                    WHEN purchase_type = 'sell' THEN -share_count 
+                    ELSE 0 END) > 0;
+        """
+        params = (user_id)
+
+        # retrieve from database
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(owned_stock_query, params)
+        owned_stocks = cur.fetchall()
+        conn.commit()
+        cur.close()
+        conn.close()
+        return jsonify(owned_stocks)
+    except:
+        print("Error retrieving list of owned stocks")
+        return jsonify({"error": "Cannot retrieve owned stock"})
 
 if __name__ == '__main__':
     app.run(debug=True)
