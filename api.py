@@ -65,32 +65,31 @@ def add_product():
 # Search for stocks
 @app.route('/search_stock', methods=['GET'])
 def search_stock():
-    # body = request.get_json()
     stock_symbol = request.args.get("symbol")
-    stock = yf.Ticker(stock_symbol)
+    try:
+        stock = yf.Ticker(stock_symbol)
 
-    company_name = stock.info.get("longName", "N/A")
+        if stock.info.get("quoteType") != "EQUITY":
+            raise ValueError
 
-    current_price = stock.history(period="1d")["Close"][0]
-    print(type(current_price))
-    current_price = round(current_price, 2)
-    current_price_str = f"{current_price:.2f}"
-    print("Current price:", current_price_str)
+        company_name = stock.info.get("longName", "N/A")
 
-    historical_data = stock.history(period="5d")  # data for the last day
-    print("Historical Data:")
-    print(historical_data)
+        current_price = stock.history(period="1d")["Close"][0]
+        current_price = round(current_price, 2)
+        current_price_str = f"{current_price:.2f}"
 
-    yday_price = stock.history(period="5d")["Close"][3]
-    print("Yday's price:", yday_price)
+        historical_data = stock.history(period="5d")  # data for the last day
 
-    daily_percentage_change = ((current_price - yday_price) / yday_price) * 100
-    print(type(daily_percentage_change))
-    daily_percentage_change = round(daily_percentage_change, 2)
-    daily_percentage_change_str = f"{daily_percentage_change:.2f}"
-    print("daily percentage change:", daily_percentage_change_str, "%")
+        yday_price = stock.history(period="5d")["Close"][3]
 
-    return jsonify({"company_name": company_name, "current_price": current_price_str, "daily_percentage_change": daily_percentage_change_str})
+        daily_percentage_change = ((current_price - yday_price) / yday_price) * 100
+        daily_percentage_change = round(daily_percentage_change, 2)
+        daily_percentage_change_str = f"{daily_percentage_change:.2f}"
+
+        return jsonify({"company_name": company_name, "current_price": current_price_str, "daily_percentage_change": daily_percentage_change_str})
+    except:
+        print("Stock for symbol", stock_symbol, "not found.")
+        return jsonify({"error": "Stock not found"})
 
 
 if __name__ == '__main__':

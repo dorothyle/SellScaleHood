@@ -43,12 +43,18 @@ const SearchStock: FC = () => {
         </label>
         <button type="submit">Submit</button>
       </form>
-      {searchResult && (
+      {searchResult && !searchResult.error && (
         <div className="stockInfo">
           <p>RESPONSE</p>
           <p>Company name: {searchResult.company_name}</p>
           <p>Current price: {searchResult.current_price}</p>
           <p>Percentage change: {searchResult.daily_percentage_change}</p>
+        </div>
+      )}
+
+      {searchResult && searchResult.error && (
+        <div>
+            <p>ERROR!</p>
         </div>
       )}
     </div>
