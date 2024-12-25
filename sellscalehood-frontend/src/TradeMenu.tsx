@@ -1,17 +1,24 @@
 import React, { FC, useState, FormEvent } from "react";
 import PreviewOrder from "./PreviewOrder.tsx";
+import { Order } from "./order.ts";
 
 const TradeMenu: FC = () => {
   const user_id = 1;
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResult, setSearchResult] = useState<any | null>(null);
+  const [order, setOrder] = useState<Order>({
+    stock: null,
+    purchase_type: null,
+    share_count: null,
+    price: null,
+    user_id: 1,
+  });
   const [stockSymbol, setStockSymbol] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState<string | null>(null);
   const [purchaseType, setPurchaseType] = useState<string>("");
   const [shareCount, setShareCount] = useState<number>(0);
   const [sharePrice, setSharePrice] = useState<number | null>(null);
   const [previewingOrder, setPreviewingOrder] = useState<boolean>(false);
-
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -41,6 +48,40 @@ const TradeMenu: FC = () => {
       console.error("Request failed:", error);
     }
   };
+
+  const submitOrder = async () => {
+    try {
+      const url = "http://127.0.0.1:5000/create_order";
+      console.log(order);
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(order),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("API response:", data);
+      } else {
+        console.error("API ERROR:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Request failed:", error);
+    }
+  }
+
+  const triggerPreviewOrder = () => {
+    setPreviewingOrder(true);
+    setOrder({
+      stock: stockSymbol,
+      purchase_type: purchaseType,
+      share_count: shareCount,
+      price: sharePrice,
+      user_id: user_id,
+    })
+  }
 
   const clearOrder = () => {
     setStockSymbol(null);
@@ -109,7 +150,7 @@ const TradeMenu: FC = () => {
       {previewingOrder && (
         <div>
           <PreviewOrder stock_symbol={stockSymbol} company_name={companyName} purchase_type={purchaseType} share_count={shareCount} price={sharePrice} user_id={user_id} />
-          <button>Place Order</button>
+          <button onClick={ submitOrder }>Place Order</button>
         </div>
       )}
     </div>
