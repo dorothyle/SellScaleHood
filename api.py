@@ -29,41 +29,6 @@ def get_db_connection():
     )
     return conn
 
-# Example route to get data from a table
-@app.route('/', methods=['GET'])
-def home():
-    return "home page"
-
-# Example route to get data from a table
-@app.route('/products', methods=['GET'])
-def get_products():
-    conn = get_db_connection()
-    print("database connection success")
-    cur = conn.cursor()
-    cur.execute('SELECT * FROM products;')
-    products = cur.fetchall()
-    cur.close()
-    conn.close()
-    return jsonify(products)
-
-# # Example route to insert data into the table
-@app.route('/add_product', methods=['POST'])
-def add_product():
-    new_product = request.get_json()
-    product_name = new_product['product_name']
-    price = new_product['price']
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute(
-        'INSERT INTO products (product_name, price) VALUES (%s, %s);', 
-        (product_name, price)
-    )
-    conn.commit()
-    cur.close()
-    conn.close()
-    return jsonify({"message": "Product added successfully!"})
-
 # Search for stocks
 @app.route('/search_stock', methods=['GET'])
 def search_stock():
@@ -77,13 +42,11 @@ def search_stock():
         stock_symbol = stock.info.get("symbol")
         company_name = stock.info.get("longName", "N/A")
 
-        current_price = stock.history(period="1d")["Close"][0]
+        current_price = stock.history(period="1d")["Close"].iloc[0]
         current_price = round(current_price, 2)
         current_price_str = f"{current_price:.2f}"
 
-        historical_data = stock.history(period="5d")  # data for the last day
-
-        yday_price = stock.history(period="5d")["Close"][3]
+        yday_price = stock.history(period="5d")["Close"].iloc[3]
 
         daily_percentage_change = ((current_price - yday_price) / yday_price) * 100
         daily_percentage_change = round(daily_percentage_change, 2)
@@ -92,7 +55,7 @@ def search_stock():
         return jsonify({"stock_symbol": stock_symbol, "company_name": company_name, "current_price": current_price_str, "daily_percentage_change": daily_percentage_change_str})
     except:
         print("Stock for symbol", stock_symbol, "not found.")
-        return jsonify({"error": "Stock not found"})
+        return jsonify({"error": "Stock not found"}), 500
     
 # Buy/sell stock
 @app.route("/create_order", methods=['POST'])
@@ -121,7 +84,7 @@ def create_order():
         return jsonify({"message": "success"})
     except:
         print("Error placing order")
-        return jsonify({"error": "Cannot place order"})
+        return jsonify({"error": "Cannot place order"}), 500
     
 # Retrieve list of owned stock
 @app.route('/owned_stocks', methods=['GET'])
@@ -171,7 +134,7 @@ def get_owned_stocks():
         return jsonify(owned_stocks)
     except:
         print("Error retrieving list of owned stocks")
-        return jsonify({"error": "Cannot retrieve owned stock"})
+        return jsonify({"error": "Cannot retrieve owned stock"}), 500
     
 # Retrieve list of owned stock
 @app.route('/portfolio_value', methods=['GET'])
@@ -194,7 +157,7 @@ def get_portfolio_value():
         return jsonify({"portfolio_value":portfolio_value})
     except:
         print("Error retrieving total portfolio value")
-        return jsonify({"error": "Cannot retrieve total portfolio value"})
+        return jsonify({"error": "Cannot retrieve total portfolio value"}), 500
     
 # Retrieve historical data
 @app.route("/historical_data", methods=['GET'])
@@ -206,11 +169,11 @@ def get_historical_data():
         if stock.info.get("quoteType") != "EQUITY":
             raise ValueError
         historical_data = stock.history(period="1mo")  # data for the last month
-        historical_data = historical_data.reset_index().to_dict(orient='records') # convert to dictionary
-        return jsonify({"stock_symbol": stock_symbol, "historical_data": historical_data})
+        historical_data = historical_data[["Close"]].reset_index().to_dict(orient="records")
+        return jsonify(historical_data)
     except:
         print("Error retrieving historical data")
-        return jsonify({"error": "Cannot retrieve historical data"})
+        return jsonify({"error": "Cannot retrieve historical data"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
