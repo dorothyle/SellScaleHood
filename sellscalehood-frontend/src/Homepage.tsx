@@ -1,15 +1,13 @@
 import React from 'react';
-import SearchStock from './SearchStock.tsx';
 import TradeMenu from './TradeMenu.tsx';
-import Positions from './Positions.tsx';
+import Portfolio from './Portfolio.tsx';
 
 const Homepage = () => {
   return (
     <div>
       <p>Hi, this is the homepage</p>
-      {/* <SearchStock /> */}
       <TradeMenu />
-      <Positions />
+      <Portfolio />
     </div>
   );
 }
