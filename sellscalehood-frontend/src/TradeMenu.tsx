@@ -9,7 +9,7 @@ const TradeMenu: FC = () => {
   const [order, setOrder] = useState<Order>({
     stock_symbol: null,
     purchase_type: null,
-    share_count: null,
+    share_count: 0,
     price: null,
     user_id: 1,
   });
@@ -72,15 +72,25 @@ const TradeMenu: FC = () => {
     }
   }
 
-  const triggerPreviewOrder = () => {
-    setPreviewingOrder(true);
-    setOrder({
-      stock_symbol: stockSymbol,
-      purchase_type: purchaseType,
-      share_count: shareCount,
-      price: sharePrice,
-      user_id: user_id,
-    })
+  const isValidOrder = () => {
+    return stockSymbol !== null && purchaseType !== null && shareCount !== null && shareCount > 0 && sharePrice !== null && user_id !== null
+  }
+
+  const triggerPreviewOrder = () => {      
+      if (isValidOrder()) {
+        setPreviewingOrder(true);
+      } else {
+        setPreviewingOrder(false);
+        setOrder({
+          stock_symbol: null,
+          purchase_type: null,
+          share_count: null,
+          price: null,
+          user_id: 1,
+        });
+        alert("Invalid order. Please fill out all fields.");
+      }
+      console.log(order);
   }
 
   const clearOrder = () => {
@@ -89,6 +99,13 @@ const TradeMenu: FC = () => {
     setPurchaseType(null);
     setShareCount(0);
     setSharePrice(null);
+    setOrder({
+      stock_symbol: null,
+      purchase_type: null,
+      share_count: null,
+      price: null,
+      user_id: 1,
+    });
     setPreviewingOrder(false);
   }
 
