@@ -1,21 +1,21 @@
 import React, { FC, useState, FormEvent } from "react";
+import PreviewOrder from "./PreviewOrder.tsx";
 
-interface TradeMenuProps {
-    stock_symbol: string;
-    price: number;
-    user_id: string;
-}
-
-const TradeMenu: FC<TradeMenuProps> = ({ stock_symbol, price, user_id }) => {
+const TradeMenu: FC = () => {
+  const user_id = 1;
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResult, setSearchResult] = useState<any | null>(null);
-  const [shareCount, setShareCount] = useState<number>(0);
+  const [stockSymbol, setStockSymbol] = useState<string | null>(null);
+  const [companyName, setCompanyName] = useState<string | null>(null);
   const [purchaseType, setPurchaseType] = useState<string>("");
+  const [shareCount, setShareCount] = useState<number>(0);
+  const [sharePrice, setSharePrice] = useState<number | null>(null);
+  const [previewingOrder, setPreviewingOrder] = useState<boolean>(false);
 
-  console.log(purchaseType);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    clearOrder();
     console.log(searchInput);
 
     try {
@@ -30,6 +30,9 @@ const TradeMenu: FC<TradeMenuProps> = ({ stock_symbol, price, user_id }) => {
       if (response.ok) {
         const data = await response.json();
         setSearchResult(data);
+        setStockSymbol(searchInput);
+        setSharePrice(data.current_price);
+        setCompanyName(data.company_name);
         console.log("API response:", data);
       } else {
         console.error("API ERROR:", response.statusText);
@@ -38,6 +41,15 @@ const TradeMenu: FC<TradeMenuProps> = ({ stock_symbol, price, user_id }) => {
       console.error("Request failed:", error);
     }
   };
+
+  const clearOrder = () => {
+    setStockSymbol(null);
+    setCompanyName(null);
+    setPurchaseType(null);
+    setShareCount(0);
+    setSharePrice(null);
+    setPreviewingOrder(false);
+  }
 
   return (
     <div>
@@ -89,9 +101,17 @@ const TradeMenu: FC<TradeMenuProps> = ({ stock_symbol, price, user_id }) => {
           />
         </label>
       </form>
-      
+
       {/* Preview order button */}
-      <button>Preview Order</button>
+      <button onClick={triggerPreviewOrder}>Preview Order</button>
+
+      {/* TODO: have button direct to preview order page; pass in searched stock and its price */}
+      {previewingOrder && (
+        <div>
+          <PreviewOrder stock_symbol={stockSymbol} company_name={companyName} purchase_type={purchaseType} share_count={shareCount} price={sharePrice} user_id={user_id} />
+          <button>Place Order</button>
+        </div>
+      )}
     </div>
   );
 };

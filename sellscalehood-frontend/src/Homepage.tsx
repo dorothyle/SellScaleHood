@@ -6,7 +6,7 @@ const Homepage = () => {
   return (
     <div>
       <p>Hi, this is the homepage</p>
-      <SearchStock />
+      {/* <SearchStock /> */}
       <TradeMenu />
     </div>
   );
