@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Positions from "./Positions.tsx";
+import "./styling/Portfolio.css";
 
-const Portfolio = () => {
+const Portfolio = ({setDisplayTradeMenu}) => {
   const user_id = 1;
   const [portfolioVal, setPortfolioVal] = useState<number>(0);
   useEffect(() => {
@@ -31,9 +32,15 @@ const Portfolio = () => {
     fetchData();
   }, []);
   return (
-    <div>
-      <p>Portfolio</p>
-      <p>${portfolioVal.toFixed(2)}</p>
+    <div className="portfolioContainer">
+      <div className="portfolioHeader">
+        <div>
+          <h3 className="portfolioTitle">Portfolio Balance</h3>
+          <h2 className="portfolioBalance">${portfolioVal.toFixed(2)}</h2>
+        </div>
+        <button className="tradeButton" onClick={() => setDisplayTradeMenu(true)}>+</button>
+      </div>
+      <h3 className="portfolioTitle portfolioPositions">Portfolio Positions</h3>
       <Positions />
     </div>
   );

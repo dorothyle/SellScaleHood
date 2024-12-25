@@ -43,7 +43,10 @@ const Positions = () => {
     <div className="positionsContainer">
       {ownedStocks.map((item, index) => (
         <div className="ownedStock" key={index}>
-          <p className="ownedStockName">{item.stock}</p>
+          <div>
+            <p className="ownedStockName">{item.stock}</p>
+            <p className="ownedStockShares">{item.net_shares} shares</p>
+          </div>
           <div>
             <p className="ownedStockPrice">{item.current_price}</p>
             <p
@@ -51,7 +54,8 @@ const Positions = () => {
                 item.daily_percentage_change >= 0 ? "positive" : "negative"
               }`}
             >
-              {item.daily_percentage_change >= 0 ? "+" : ""}{item.daily_percentage_change}%
+              {item.daily_percentage_change >= 0 ? "+" : ""}
+              {item.daily_percentage_change}%
             </p>
           </div>
         </div>
