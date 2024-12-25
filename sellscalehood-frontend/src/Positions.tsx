@@ -25,9 +25,7 @@ const Positions = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
           setOwnedStocks(data);
-          console.log("List of owned stock:", data);
         } else {
           console.error("API ERROR:", response.statusText);
         }

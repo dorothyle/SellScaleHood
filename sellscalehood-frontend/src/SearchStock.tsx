@@ -6,7 +6,6 @@ const SearchStock: FC = () => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    console.log(searchInput);
 
     try {
       const url = "http://127.0.0.1:5000/search_stock?symbol=" + searchInput;
@@ -20,7 +19,6 @@ const SearchStock: FC = () => {
       if (response.ok) {
         const data = await response.json();
         setSearchResult(data);
-        console.log("API response:", data);
       } else {
         console.error("API ERROR:", response.statusText);
       }

@@ -19,7 +19,6 @@ const Portfolio = ({setDisplayTradeMenu}) => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
           setPortfolioVal(data.portfolio_value);
         } else {
           console.error("API ERROR:", response.statusText);

@@ -23,7 +23,6 @@ const TradeMenu: FC = ({ displayTradeMenu, setDisplayTradeMenu }) => {
 
   const searchForStock = async (event: FormEvent) => {
     event.preventDefault();
-    console.log(searchInput);
 
     try {
       const url = "http://127.0.0.1:5000/search_stock?symbol=" + searchInput;
@@ -40,7 +39,6 @@ const TradeMenu: FC = ({ displayTradeMenu, setDisplayTradeMenu }) => {
         setStockSymbol(data.stock_symbol);
         setSharePrice(data.current_price);
         setCompanyName(data.company_name);
-        console.log("API response:", data);
       } else {
         console.error("API ERROR:", response.statusText);
       }
@@ -52,8 +50,6 @@ const TradeMenu: FC = ({ displayTradeMenu, setDisplayTradeMenu }) => {
   const submitOrder = async () => {
     try {
       const url = "http://127.0.0.1:5000/create_order";
-      console.log("calling submitOrder");
-      console.log(order);
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -65,7 +61,6 @@ const TradeMenu: FC = ({ displayTradeMenu, setDisplayTradeMenu }) => {
       if (response.ok) {
         const data = await response.json();
         alert("Order placed.");
-        console.log("API response:", data);
         clearOrder();
         window.location.reload();
       } else {
@@ -108,7 +103,6 @@ const TradeMenu: FC = ({ displayTradeMenu, setDisplayTradeMenu }) => {
       });
       alert("Invalid order. Please fill out all fields.");
     }
-    console.log(order);
   };
 
   const clearOrder = () => {
