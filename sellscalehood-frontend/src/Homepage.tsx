@@ -1,6 +1,7 @@
 import React from 'react';
 import SearchStock from './SearchStock.tsx';
 import TradeMenu from './TradeMenu.tsx';
+import Positions from './Positions.tsx';
 
 const Homepage = () => {
   return (
@@ -8,6 +9,7 @@ const Homepage = () => {
       <p>Hi, this is the homepage</p>
       {/* <SearchStock /> */}
       <TradeMenu />
+      <Positions />
     </div>
   );
 }
