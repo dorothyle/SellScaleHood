@@ -1,6 +1,7 @@
 import React, { FC, useState, FormEvent } from "react";
 import PreviewOrder from "./PreviewOrder.tsx";
 import { Order } from "./order.ts";
+import "./styling/TradeMenu.css";
 
 const TradeMenu: FC = () => {
   const user_id = 1;
@@ -51,7 +52,7 @@ const TradeMenu: FC = () => {
   const submitOrder = async () => {
     try {
       const url = "http://127.0.0.1:5000/create_order";
-      console.log("calling submitOrder")
+      console.log("calling submitOrder");
       console.log(order);
       const response = await fetch(url, {
         method: "POST",
@@ -63,6 +64,7 @@ const TradeMenu: FC = () => {
 
       if (response.ok) {
         const data = await response.json();
+        alert("Order placed.");
         console.log("API response:", data);
         clearOrder();
       } else {
@@ -71,35 +73,42 @@ const TradeMenu: FC = () => {
     } catch (error) {
       console.error("Request failed:", error);
     }
-  }
+  };
 
   const isValidOrder = () => {
-    return stockSymbol !== null && purchaseType !== null && shareCount !== null && shareCount > 0 && sharePrice !== null && user_id !== null
-  }
+    return (
+      stockSymbol !== null &&
+      purchaseType !== null &&
+      shareCount !== null &&
+      shareCount > 0 &&
+      sharePrice !== null &&
+      user_id !== null
+    );
+  };
 
-  const triggerPreviewOrder = () => {      
-      if (isValidOrder()) {
-        setPreviewingOrder(true);
-        setOrder({
-          stock_symbol: stockSymbol,
-          purchase_type: purchaseType,
-          share_count: shareCount,
-          price: sharePrice,
-          user_id: user_id,
-        })
-      } else {
-        setPreviewingOrder(false);
-        setOrder({
-          stock_symbol: null,
-          purchase_type: null,
-          share_count: null,
-          price: null,
-          user_id: 1,
-        });
-        alert("Invalid order. Please fill out all fields.");
-      }
-      console.log(order);
-  }
+  const triggerPreviewOrder = () => {
+    if (isValidOrder()) {
+      setPreviewingOrder(true);
+      setOrder({
+        stock_symbol: stockSymbol,
+        purchase_type: purchaseType,
+        share_count: shareCount,
+        price: sharePrice,
+        user_id: user_id,
+      });
+    } else {
+      setPreviewingOrder(false);
+      setOrder({
+        stock_symbol: null,
+        purchase_type: null,
+        share_count: null,
+        price: null,
+        user_id: 1,
+      });
+      alert("Invalid order. Please fill out all fields.");
+    }
+    console.log(order);
+  };
 
   const clearOrder = () => {
     setStockSymbol(null);
@@ -115,52 +124,78 @@ const TradeMenu: FC = () => {
       user_id: 1,
     });
     setPreviewingOrder(false);
-  }
+  };
 
   return (
-    <div>
-      <p>Buy Menu</p>
+    <div className="tradeMenuContainer">
+      <h2>Trade</h2>
       {/* Look up stock to trade */}
-      <form onSubmit={searchForStock}>
+      <form className="searchStockForm" onSubmit={searchForStock}>
         <label>
-          Enter Stock:
           <input
+            className="stockInput"
+            placeholder="Enter stock symbol"
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
         </label>
-        <button type="submit">Submit</button>
+        <button className="searchButton" type="submit">
+          Search
+        </button>
       </form>
 
       {/* Render search results */}
       {searchResult && !searchResult.error && (
         <div className="stockInfo">
-          <p>RESPONSE</p>
-          <p>Company name: {searchResult.company_name}</p>
-          <p>Current price: {searchResult.current_price}</p>
-          <p>Percentage change: {searchResult.daily_percentage_change}</p>
-
-          <button>Buy</button>
+          <p className="companyName">{searchResult.company_name}</p>
+          <div className="stockStats">
+            <p className="price">${searchResult.current_price}</p>
+            <p
+              className={`percentageChange ${
+                searchResult.daily_percentage_change >= 0
+                  ? "positive"
+                  : "negative"
+              }`}
+            >
+              {searchResult.daily_percentage_change >= 0 ? "+" : ""}
+              {searchResult.daily_percentage_change}%
+            </p>
+          </div>
         </div>
       )}
 
       {searchResult && searchResult.error && (
         <div>
-            <p>ERROR!</p>
+          <p>Stock not found</p>
         </div>
       )}
 
       {/* Buy or sell buttons */}
-      <div>
-        <button onClick={() => setPurchaseType("buy")}>Buy</button>
-        <button onClick={() => setPurchaseType("sell")}>Sell</button>
+      <div className="purchaseButtons">
+        <button
+          className={`buyButton ${
+            purchaseType === "BUY" ? "selected" : "notSelected"
+          }`}
+          onClick={() => setPurchaseType("BUY")}
+        >
+          Buy
+        </button>
+        <button
+          className={`sellButton ${
+            purchaseType === "SELL" ? "selected" : "notSelected"
+          }`}
+          onClick={() => setPurchaseType("SELL")}
+        >
+          Sell
+        </button>
       </div>
       {/* Share amount */}
       <form>
-        <label>
-          Share amount
+        <label className="shareAmountForm">
+          <p>Share amount</p>
           <input
+            className="shareAmountInput"
             type="number"
             value={shareCount}
             onChange={(e) => setShareCount(e.target.value)}
@@ -169,12 +204,19 @@ const TradeMenu: FC = () => {
       </form>
 
       {/* Preview order button */}
-      <button onClick={triggerPreviewOrder}>Preview Order</button>
+      <button className="orderButtons" onClick={triggerPreviewOrder}>Preview Order</button>
 
       {previewingOrder && (
-        <div>
-          <PreviewOrder stock_symbol={stockSymbol} company_name={companyName} purchase_type={purchaseType} share_count={shareCount} price={sharePrice} user_id={user_id} />
-          <button onClick={ submitOrder }>Place Order</button>
+        <div className="previewOrderDetails">
+          <PreviewOrder
+            stock_symbol={stockSymbol}
+            company_name={companyName}
+            purchase_type={purchaseType}
+            share_count={shareCount}
+            price={sharePrice}
+            user_id={user_id}
+          />
+          <button className="orderButtons" onClick={submitOrder}>Place Order</button>
         </div>
       )}
     </div>

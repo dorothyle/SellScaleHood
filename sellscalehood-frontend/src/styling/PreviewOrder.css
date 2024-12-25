@@ -1,0 +1,26 @@
+.orderPreviewContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.orderPreviewRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 1px solid #404040;
+}
+
+.orderPreviewRow:last-child {
+    border-bottom: none;
+}
+
+.orderPreviewRow p {
+    font-size: 20px;
+}
+
+.rowTitle {
+    font-weight: 500;
+}

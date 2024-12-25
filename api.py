@@ -132,8 +132,8 @@ def get_owned_stocks():
         owned_stock_query = """
         SELECT 
             stock,
-            SUM(CASE WHEN purchase_type = 'buy' THEN share_count 
-                    WHEN purchase_type = 'sell' THEN -share_count 
+            SUM(CASE WHEN purchase_type = 'BUY' THEN share_count 
+                    WHEN purchase_type = 'SELL' THEN -share_count 
                     ELSE 0 END) AS net_shares
         FROM 
             order_history
@@ -142,8 +142,8 @@ def get_owned_stocks():
         GROUP BY 
             stock
         HAVING 
-            SUM(CASE WHEN purchase_type = 'buy' THEN share_count 
-                    WHEN purchase_type = 'sell' THEN -share_count 
+            SUM(CASE WHEN purchase_type = 'BUY' THEN share_count 
+                    WHEN purchase_type = 'SELL' THEN -share_count 
                     ELSE 0 END) > 0;
         """
         params = (user_id)
