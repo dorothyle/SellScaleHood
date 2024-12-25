@@ -14,7 +14,7 @@
 }
 
 .ownedStockName {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 600;
 }
 
@@ -24,11 +24,11 @@
 }
 
 .ownedStockPrice {
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .ownedStockPercentChange {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .positive {

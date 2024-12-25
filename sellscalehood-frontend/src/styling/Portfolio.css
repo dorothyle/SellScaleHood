@@ -37,3 +37,9 @@
 .portfolioPositions {
     margin-bottom: 2%;
 }
+
+@media (min-width: 800px) {
+    .tradeButton {
+        display: none;
+    }
+}

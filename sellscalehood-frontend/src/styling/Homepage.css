@@ -6,3 +6,11 @@
     margin-left: 8%;
     margin-right: 8%;
 }
+
+@media (min-width: 800px) {
+    .contentContainer {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+  }
