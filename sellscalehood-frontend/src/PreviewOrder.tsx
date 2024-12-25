@@ -38,7 +38,7 @@ const PreviewOrder: FC<PreviewOrderProps> = ({
       </div>
       <div className="orderPreviewRow">
         <p className="rowTitle">Total price</p>
-        <p className="rowData">{price * share_count}</p>
+        <p className="rowData">${(price * share_count).toFixed(2)}</p>
       </div>
     </div>
   );
