@@ -20,9 +20,8 @@ const TradeMenu: FC = () => {
   const [sharePrice, setSharePrice] = useState<number | null>(null);
   const [previewingOrder, setPreviewingOrder] = useState<boolean>(false);
 
-  const handleSubmit = async (event: FormEvent) => {
+  const searchForStock = async (event: FormEvent) => {
     event.preventDefault();
-    clearOrder();
     console.log(searchInput);
 
     try {
@@ -52,6 +51,7 @@ const TradeMenu: FC = () => {
   const submitOrder = async () => {
     try {
       const url = "http://127.0.0.1:5000/create_order";
+      console.log("calling submitOrder")
       console.log(order);
       const response = await fetch(url, {
         method: "POST",
@@ -64,6 +64,7 @@ const TradeMenu: FC = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("API response:", data);
+        clearOrder();
       } else {
         console.error("API ERROR:", response.statusText);
       }
@@ -79,6 +80,13 @@ const TradeMenu: FC = () => {
   const triggerPreviewOrder = () => {      
       if (isValidOrder()) {
         setPreviewingOrder(true);
+        setOrder({
+          stock_symbol: stockSymbol,
+          purchase_type: purchaseType,
+          share_count: shareCount,
+          price: sharePrice,
+          user_id: user_id,
+        })
       } else {
         setPreviewingOrder(false);
         setOrder({
@@ -113,7 +121,7 @@ const TradeMenu: FC = () => {
     <div>
       <p>Buy Menu</p>
       {/* Look up stock to trade */}
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={searchForStock}>
         <label>
           Enter Stock:
           <input
