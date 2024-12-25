@@ -1,4 +1,4 @@
-import React, { FC, useState, FormEvent } from "react";
+import React, { FC } from "react";
 
 interface PreviewOrderProps {
     stock_symbol: string;
