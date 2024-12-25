@@ -40,9 +40,11 @@ const TradeMenu: FC = ({ setDisplayTradeMenu }) => {
         setSharePrice(data.current_price);
         setCompanyName(data.company_name);
       } else {
+        setSearchResult({ error: response.statusText })
         console.error("API ERROR:", response.statusText);
       }
     } catch (error) {
+      setSearchResult({ error: "An unexpected error occurred." })
       console.error("Request failed:", error);
     }
   };
@@ -97,7 +99,7 @@ const TradeMenu: FC = ({ setDisplayTradeMenu }) => {
       setOrder({
         stock_symbol: null,
         purchase_type: null,
-        share_count: null,
+        share_count: 0,
         price: null,
         user_id: 1,
       });
@@ -114,7 +116,7 @@ const TradeMenu: FC = ({ setDisplayTradeMenu }) => {
     setOrder({
       stock_symbol: null,
       purchase_type: null,
-      share_count: null,
+      share_count: 0,
       price: null,
       user_id: 1,
     });
