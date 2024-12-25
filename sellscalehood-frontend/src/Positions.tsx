@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
+import "./styling/Positions.css";
 
 interface OwnedStockData {
-    stock: string,
-    share_count: number,
-    current_price: number,
-    daily_percentage_change: number,
+  stock: string;
+  share_count: number;
+  current_price: number;
+  daily_percentage_change: number;
 }
 
 const Positions = () => {
@@ -39,17 +40,22 @@ const Positions = () => {
   }, []);
 
   return (
-    <div>
-      <p>Positions here</p>
-      {
-        ownedStocks.map((item, index) => (
-            <div key={index}>
-                <p>{item.stock}</p>
-                <p>{item.current_price}</p>
-                <p>{item.daily_percentage_change}</p>
-            </div>
-        ))
-      }
+    <div className="positionsContainer">
+      {ownedStocks.map((item, index) => (
+        <div className="ownedStock" key={index}>
+          <p className="ownedStockName">{item.stock}</p>
+          <div>
+            <p className="ownedStockPrice">{item.current_price}</p>
+            <p
+              className={`ownedStockPercentChange ${
+                item.daily_percentage_change >= 0 ? "positive" : "negative"
+              }`}
+            >
+              {item.daily_percentage_change >= 0 ? "+" : ""}{item.daily_percentage_change}%
+            </p>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
