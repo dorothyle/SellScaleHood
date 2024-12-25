@@ -14,8 +14,11 @@ const TradeMenu: FC = ({ setDisplayTradeMenu }) => {
     price: null,
     user_id: 1,
   });
+  const [stockSymbol, setStockSymbol] = useState<string | null>(null);
+  const [companyName, setCompanyName] = useState<string | null>(null);
   const [purchaseType, setPurchaseType] = useState<string>("");
   const [shareCount, setShareCount] = useState<number>(0);
+  const [sharePrice, setSharePrice] = useState<number | null>(null);
   const [previewingOrder, setPreviewingOrder] = useState<boolean>(false);
 
   const searchForStock = async (event: FormEvent) => {
@@ -33,6 +36,9 @@ const TradeMenu: FC = ({ setDisplayTradeMenu }) => {
       if (response.ok) {
         const data = await response.json();
         setSearchResult(data);
+        setStockSymbol(data.stock_symbol);
+        setSharePrice(data.current_price);
+        setCompanyName(data.company_name);
       } else {
         console.error("API ERROR:", response.statusText);
       }
@@ -67,11 +73,11 @@ const TradeMenu: FC = ({ setDisplayTradeMenu }) => {
 
   const isValidOrder = () => {
     return (
-      searchResult.stock_symbol !== null &&
+      stockSymbol !== null &&
       purchaseType !== null &&
       shareCount !== null &&
       shareCount > 0 &&
-      searchResult.current_price !== null &&
+      sharePrice !== null &&
       user_id !== null
     );
   };
@@ -80,10 +86,10 @@ const TradeMenu: FC = ({ setDisplayTradeMenu }) => {
     if (isValidOrder()) {
       setPreviewingOrder(true);
       setOrder({
-        stock_symbol: searchResult.stock_symbol,
+        stock_symbol: stockSymbol,
         purchase_type: purchaseType,
         share_count: shareCount,
-        price: searchResult.current_price,
+        price: sharePrice,
         user_id: user_id,
       });
     } else {
@@ -100,9 +106,11 @@ const TradeMenu: FC = ({ setDisplayTradeMenu }) => {
   };
 
   const clearOrder = () => {
-    setSearchResult(null);
+    setStockSymbol(null);
+    setCompanyName(null);
     setPurchaseType(null);
     setShareCount(0);
+    setSharePrice(null);
     setOrder({
       stock_symbol: null,
       purchase_type: null,
@@ -197,11 +205,11 @@ const TradeMenu: FC = ({ setDisplayTradeMenu }) => {
       {previewingOrder && (
         <div className="previewOrderDetails">
           <PreviewOrder
-            stock_symbol={searchResult.stock_symbol}
-            company_name={searchResult.company_name}
+            stock_symbol={stockSymbol}
+            company_name={companyName}
             purchase_type={purchaseType}
             share_count={shareCount}
-            price={searchResult.current_price}
+            price={sharePrice}
             user_id={user_id}
           />
           <button className="orderButtons" onClick={submitOrder}>Place Order</button>
