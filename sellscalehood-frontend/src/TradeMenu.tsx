@@ -67,6 +67,7 @@ const TradeMenu: FC = ({ displayTradeMenu, setDisplayTradeMenu }) => {
         alert("Order placed.");
         console.log("API response:", data);
         clearOrder();
+        window.location.reload();
       } else {
         console.error("API ERROR:", response.statusText);
       }
