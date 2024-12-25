@@ -195,6 +195,22 @@ def get_portfolio_value():
     except:
         print("Error retrieving total portfolio value")
         return jsonify({"error": "Cannot retrieve total portfolio value"})
+    
+# Retrieve historical data
+@app.route("/historical_data", methods=['GET'])
+def get_historical_data():
+    stock_symbol = request.args.get("stock_symbol")
+    try:
+        stock = yf.Ticker(stock_symbol)
+
+        if stock.info.get("quoteType") != "EQUITY":
+            raise ValueError
+        historical_data = stock.history(period="1mo")  # data for the last month
+        historical_data = historical_data.reset_index().to_dict(orient='records') # convert to dictionary
+        return jsonify({"stock_symbol": stock_symbol, "historical_data": historical_data})
+    except:
+        print("Error retrieving historical data")
+        return jsonify({"error": "Cannot retrieve historical data"})
 
 if __name__ == '__main__':
     app.run(debug=True)
