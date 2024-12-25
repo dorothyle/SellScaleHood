@@ -42,4 +42,8 @@
     .tradeButton {
         display: none;
     }
+
+    .portfolioContainer {
+        width: 48%;
+    }
 }

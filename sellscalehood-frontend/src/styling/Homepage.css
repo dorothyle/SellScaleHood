@@ -1,16 +1,23 @@
 .homepageContainer {
     background-color: #1c1c1c;
+    display: flex;
+    flex-direction: column;
+    margin-left: 8%;
+    margin-right: 8%;
+}
+
+.homepageContainer h1 {
+    color: white;
+    font-size: 40px;
 }
 
 .contentContainer {
-    margin-left: 8%;
-    margin-right: 8%;
 }
 
 @media (min-width: 800px) {
     .contentContainer {
         display: flex;
         flex-direction: row;
-        justify-content: space-evenly;
+        justify-content: space-between;
     }
   }
