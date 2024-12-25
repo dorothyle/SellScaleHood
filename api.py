@@ -95,27 +95,31 @@ def search_stock():
 # Buy/sell stock
 @app.route("/create_order", methods=['POST'])
 def create_order():
-    body = request.get_json()
+    try:
+        body = request.get_json()
 
-    # receive share count, stock symbol, price of one stock, user_id
-    stock = body['stock_symbol']
-    purchase_type = body['purchase_type']
-    share_count = body['share_count']
-    price = body['price']
-    user_id = body['user_id']
+        # receive share count, stock symbol, price of one stock, user_id
+        stock = body['stock_symbol']
+        purchase_type = body['purchase_type']
+        share_count = body['share_count']
+        price = body['price']
+        user_id = body['user_id']
 
-    # create query
-    add_order_query = "INSERT INTO order_history (stock, purchase_type, share_count, price, user_id) VALUES (%s, %s, %s, %s, %s);"
-    values = (stock, purchase_type, share_count, price, user_id)
+        # create query
+        add_order_query = "INSERT INTO order_history (stock, purchase_type, share_count, price, user_id) VALUES (%s, %s, %s, %s, %s);"
+        values = (stock, purchase_type, share_count, price, user_id)
 
-    # add order to database
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute(add_order_query, values)
-    conn.commit()
-    cur.close()
-    conn.close()
-    return jsonify({"message": "success"})
+        # add order to database
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(add_order_query, values)
+        conn.commit()
+        cur.close()
+        conn.close()
+        return jsonify({"message": "success"})
+    except:
+        print("Error placing order")
+        return jsonify({"error" "Cannot place order"})
 
 if __name__ == '__main__':
     app.run(debug=True)
