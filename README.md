@@ -1,5 +1,5 @@
 
-# Project Setup Instructions
+# SellScaleHood Setup Instructions
 
 Follow the steps below to set up and run the project.
 
