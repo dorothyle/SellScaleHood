@@ -119,7 +119,7 @@ def create_order():
         return jsonify({"message": "success"})
     except:
         print("Error placing order")
-        return jsonify({"error" "Cannot place order"})
+        return jsonify({"error": "Cannot place order"})
 
 if __name__ == '__main__':
     app.run(debug=True)
