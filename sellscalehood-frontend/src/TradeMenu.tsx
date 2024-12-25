@@ -37,7 +37,7 @@ const TradeMenu: FC = () => {
       if (response.ok) {
         const data = await response.json();
         setSearchResult(data);
-        setStockSymbol(searchInput);
+        setStockSymbol(data.stock_symbol);
         setSharePrice(data.current_price);
         setCompanyName(data.company_name);
         console.log("API response:", data);
@@ -146,7 +146,6 @@ const TradeMenu: FC = () => {
       {/* Preview order button */}
       <button onClick={triggerPreviewOrder}>Preview Order</button>
 
-      {/* TODO: have button direct to preview order page; pass in searched stock and its price */}
       {previewingOrder && (
         <div>
           <PreviewOrder stock_symbol={stockSymbol} company_name={companyName} purchase_type={purchaseType} share_count={shareCount} price={sharePrice} user_id={user_id} />

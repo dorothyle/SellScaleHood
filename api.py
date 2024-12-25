@@ -72,6 +72,7 @@ def search_stock():
         if stock.info.get("quoteType") != "EQUITY":
             raise ValueError
 
+        stock_symbol = stock.info.get("symbol")
         company_name = stock.info.get("longName", "N/A")
 
         current_price = stock.history(period="1d")["Close"][0]
@@ -86,7 +87,7 @@ def search_stock():
         daily_percentage_change = round(daily_percentage_change, 2)
         daily_percentage_change_str = f"{daily_percentage_change:.2f}"
 
-        return jsonify({"company_name": company_name, "current_price": current_price_str, "daily_percentage_change": daily_percentage_change_str})
+        return jsonify({"stock_symbol": stock_symbol, "company_name": company_name, "current_price": current_price_str, "daily_percentage_change": daily_percentage_change_str})
     except:
         print("Stock for symbol", stock_symbol, "not found.")
         return jsonify({"error": "Stock not found"})
