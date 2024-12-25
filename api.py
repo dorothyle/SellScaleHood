@@ -167,7 +167,7 @@ def get_owned_stocks():
             current_price, daily_percentage_change = stock_data.get("current_price"), stock_data.get("daily_percentage_change")
             data["current_price"] = current_price
             data["daily_percentage_change"] = daily_percentage_change
-            
+
         return jsonify(owned_stocks)
     except:
         print("Error retrieving list of owned stocks")
@@ -186,11 +186,8 @@ def get_portfolio_value():
 
             # calculate total portfolio value
             for data in owned_stocks:
-                # get current price of stock
-                stock, shares = data.get("stock"), data.get("net_shares")
-                response = requests.get('http://127.0.0.1:5000/search_stock?symbol=' + stock)
-                stock_data = response.json()
-                current_price = stock_data.get("current_price")
+                shares = data.get("net_shares")
+                current_price = data.get("current_price")
                 stock_value = float(shares) * float(current_price)
                 portfolio_value += stock_value
             
