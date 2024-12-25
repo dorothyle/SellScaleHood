@@ -91,9 +91,9 @@ def search_stock():
         print("Stock for symbol", stock_symbol, "not found.")
         return jsonify({"error": "Stock not found"})
     
-# Buy stock
-@app.route("/buy_stock", methods=['POST'])
-def buy_stock():
+# Buy/sell stock
+@app.route("/create_order", methods=['POST'])
+def create_order():
     body = request.get_json()
 
     # receive share count, stock symbol, price of one stock, user_id
