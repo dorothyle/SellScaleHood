@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import psycopg2
+from psycopg2.extras import RealDictCursor
 import yfinance as yf
 import requests
 
@@ -149,12 +150,24 @@ def get_owned_stocks():
 
         # retrieve from database
         conn = get_db_connection()
-        cur = conn.cursor()
+        cur = conn.cursor(cursor_factory=RealDictCursor)
         cur.execute(owned_stock_query, params)
         owned_stocks = cur.fetchall()
         conn.commit()
         cur.close()
         conn.close()
+
+        for data in owned_stocks:
+            # retrieve stock data from search_stock endpoint
+            stock = data.get("stock")
+            response = requests.get('http://127.0.0.1:5000/search_stock?symbol=' + stock)
+            stock_data = response.json()
+
+            # include current price and today's percentage change
+            current_price, daily_percentage_change = stock_data.get("current_price"), stock_data.get("daily_percentage_change")
+            data["current_price"] = current_price
+            data["daily_percentage_change"] = daily_percentage_change
+            
         return jsonify(owned_stocks)
     except:
         print("Error retrieving list of owned stocks")
@@ -169,12 +182,12 @@ def get_portfolio_value():
         portfolio_value = 0
         if response.status_code == 200:
             # get list of owned stocks
-            owned_stock = response.json()
+            owned_stocks = response.json()
 
             # calculate total portfolio value
-            for pair in owned_stock:
+            for data in owned_stocks:
                 # get current price of stock
-                stock, shares = pair[0], pair[1]
+                stock, shares = data.get("stock"), data.get("net_shares")
                 response = requests.get('http://127.0.0.1:5000/search_stock?symbol=' + stock)
                 stock_data = response.json()
                 current_price = stock_data.get("current_price")
