@@ -3,7 +3,7 @@ import PreviewOrder from "./PreviewOrder.tsx";
 import { Order } from "./order.ts";
 import "./styling/TradeMenu.css";
 
-const TradeMenu: FC = () => {
+const TradeMenu: FC = ({ displayTradeMenu, setDisplayTradeMenu }) => {
   const user_id = 1;
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResult, setSearchResult] = useState<any | null>(null);
@@ -128,6 +128,7 @@ const TradeMenu: FC = () => {
 
   return (
     <div className="tradeMenuContainer">
+      <p className="closeMenu" onClick={() => setDisplayTradeMenu(false)}>X</p>
       <h2>Trade</h2>
       {/* Look up stock to trade */}
       <form className="searchStockForm" onSubmit={searchForStock}>

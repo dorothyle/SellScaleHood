@@ -10,7 +10,7 @@ const Homepage = () => {
       <h1>Hi, Emma</h1>
       <div className="contentContainer">
         <Portfolio setDisplayTradeMenu={setDisplayTradeMenu}/>
-        {displayTradeMenu && <TradeMenu />}
+        {displayTradeMenu && <TradeMenu displayTradeMenu={displayTradeMenu} setDisplayTradeMenu={setDisplayTradeMenu} />}
       </div>
     </div>
   );

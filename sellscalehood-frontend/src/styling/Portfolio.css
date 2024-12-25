@@ -5,16 +5,16 @@
 }
 
 .tradeButton {
-    border: none;
+    border: 3px solid #fb26ff;
     padding: 0;
     border-radius: 100px;
-    background-color: #fb26ff;
+    background-color: #292929;
     color: white;
     cursor: pointer;
     width: 60px;
     height: 60px;
     font-size: 30px;
-    background-image: linear-gradient(135deg, #fb26ff, #1fff6a);
+    background-image: linear-gradient(135deg, black, #404040);
 }
 
 .portfolioTitle {

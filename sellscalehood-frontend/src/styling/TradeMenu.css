@@ -1,4 +1,20 @@
 .tradeMenuContainer {
+    /* background-image: linear-gradient(to bottom, black, #292929);
+    color: white;
+    padding: 5%;
+    padding-top: 2%;
+    border: 3px solid #fb26ff;
+    border-bottom: none;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; */
+
+    position: fixed; /* Make it fixed to the screen */
+    bottom: 0; /* Place it at the bottom of the viewport */
+    left: 50%; /* Center it horizontally */
+    transform: translateX(-50%); /* Adjust for centering */
     background-image: linear-gradient(to bottom, black, #292929);
     color: white;
     padding: 5%;
@@ -10,12 +26,28 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 90%; /* Optional: control width */
+    max-width: 500px; /* Optional: set a max width */
+    z-index: 1000; /* Ensure it's on top */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow for popup effect */
+}
+
+.closeMenu {
+    position: absolute;
+    top: -4%;
+    right: 5%;
+    border-radius: 100px;
+    width: 20px;
+    height: 20px;
+    color: white;
+    font-weight: 600;
+    font-size: 30px;
 }
 
 .tradeMenuContainer h2 {
     font-size: 30px;
     font-weight: normal;
-    margin: 5%;
+    margin: 3%;
     padding: 0;
 }
 
@@ -30,7 +62,7 @@
     font-family: 'Poppins';
     border-radius: 12px;
     padding: 4%;
-    width: 150%;
+    width: 100%;
     border: 1px solid #404040;
     background-color: #292929;
     color: white;
