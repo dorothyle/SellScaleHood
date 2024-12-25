@@ -90,7 +90,31 @@ def search_stock():
     except:
         print("Stock for symbol", stock_symbol, "not found.")
         return jsonify({"error": "Stock not found"})
+    
+# Buy stock
+@app.route("/buy_stock", methods=['POST'])
+def buy_stock():
+    body = request.get_json()
 
+    # receive share count, stock symbol, price of one stock, user_id
+    stock = body['stock']
+    purchase_type = body['purchase_type']
+    share_count = body['share_count']
+    price = body['price']
+    user_id = body['user_id']
+
+    # create query
+    add_order_query = "INSERT INTO order_history (stock, purchase_type, share_count, price, user_id) VALUES (%s, %s, %s, %s, %s);"
+    values = (stock, purchase_type, share_count, price, user_id)
+
+    # add order to database
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(add_order_query, values)
+    conn.commit()
+    cur.close()
+    conn.close()
+    return jsonify({"message": "success"})
 
 if __name__ == '__main__':
     app.run(debug=True)
