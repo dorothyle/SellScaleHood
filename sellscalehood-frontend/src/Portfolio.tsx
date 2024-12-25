@@ -35,7 +35,7 @@ const Portfolio = ({setDisplayTradeMenu}) => {
       <div className="portfolioHeader">
         <div>
           <h3 className="portfolioTitle">Portfolio Balance</h3>
-          <h2 className="portfolioBalance">${ portfolioVal === null ? 0.00 : portfolioVal.toFixed(2) }</h2>
+          <h2 className="portfolioBalance">${ portfolioVal === null ? 0.00 : portfolioVal.toLocaleString("en-us") }</h2>
         </div>
         <button className="tradeButton" onClick={() => setDisplayTradeMenu(true)}>+</button>
       </div>
