@@ -32,8 +32,8 @@ const Portfolio = () => {
   }, []);
   return (
     <div>
-      <p>Hi, this is the portfolio</p>
-      <p>{portfolioVal}</p>
+      <p>Portfolio</p>
+      <p>${portfolioVal.toFixed(2)}</p>
       <Positions />
     </div>
   );
