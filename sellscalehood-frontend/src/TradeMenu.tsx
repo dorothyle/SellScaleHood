@@ -7,7 +7,7 @@ const TradeMenu: FC = () => {
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchResult, setSearchResult] = useState<any | null>(null);
   const [order, setOrder] = useState<Order>({
-    stock: null,
+    stock_symbol: null,
     purchase_type: null,
     share_count: null,
     price: null,
@@ -75,7 +75,7 @@ const TradeMenu: FC = () => {
   const triggerPreviewOrder = () => {
     setPreviewingOrder(true);
     setOrder({
-      stock: stockSymbol,
+      stock_symbol: stockSymbol,
       purchase_type: purchaseType,
       share_count: shareCount,
       price: sharePrice,

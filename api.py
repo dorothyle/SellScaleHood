@@ -97,7 +97,7 @@ def create_order():
     body = request.get_json()
 
     # receive share count, stock symbol, price of one stock, user_id
-    stock = body['stock']
+    stock = body['stock_symbol']
     purchase_type = body['purchase_type']
     share_count = body['share_count']
     price = body['price']
