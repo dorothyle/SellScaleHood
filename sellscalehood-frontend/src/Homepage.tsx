@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import TradeMenu from "./TradeMenu.tsx";
 import Portfolio from "./Portfolio.tsx";
 import "./styling/Homepage.css";
-import StockChart from "./styling/StockChart.tsx";
+import StockChart from "./StockChart.tsx";
 
 const Homepage = () => {
   const [displayTradeMenu, setDisplayTradeMenu] = useState<Boolean>(false);
