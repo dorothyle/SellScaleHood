@@ -2,9 +2,11 @@ import React, {useState, useEffect} from "react";
 import TradeMenu from "./TradeMenu.tsx";
 import Portfolio from "./Portfolio.tsx";
 import "./styling/Homepage.css";
+import StockChart from "./styling/StockChart.tsx";
 
 const Homepage = () => {
   const [displayTradeMenu, setDisplayTradeMenu] = useState<Boolean>(false);
+  const [inputStock, setInputStock] = useState<String>('');
 
   useEffect(() => {
     // Function to handle screen width check
@@ -29,6 +31,12 @@ const Homepage = () => {
   return (
     <div className="homepageContainer">
       <h1>Hi, Emma</h1>
+      <label>
+        <input
+          value={inputStock}
+          onChange={(e) => setInputStock(e.target.value)} />
+      </label>
+      <StockChart symbol={inputStock} />
       <div className="contentContainer">
         <Portfolio setDisplayTradeMenu={setDisplayTradeMenu}/>
         {displayTradeMenu && <TradeMenu displayTradeMenu={displayTradeMenu} setDisplayTradeMenu={setDisplayTradeMenu} />}
