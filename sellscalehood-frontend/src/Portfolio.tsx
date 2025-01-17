@@ -43,16 +43,16 @@ const Portfolio = ({setDisplayTradeMenu}) => {
         },
       });
 
+      const data = await response.json();
       if (response.ok) {
-        const data = await response.json();
         setStockAnalysis(data.analysis);
       } else {
-        setStockAnalysis({ error: response.statusText })
-        console.error("API ERROR:", response.statusText);
+        setStockAnalysis(data.error)
+        console.log("API ERROR:", response.statusText);
       }
     } catch (error) {
       setStockAnalysis({ error: "An unexpected error occurred." })
-      console.error("Request failed:", error);
+      console.log("Request failed:", error);
     }
   };
   
