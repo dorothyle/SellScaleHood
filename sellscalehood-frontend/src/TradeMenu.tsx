@@ -16,6 +16,7 @@ const TradeMenu: FC = ({ setDisplayTradeMenu }) => {
   });
   const [stockSymbol, setStockSymbol] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState<string | null>(null);
+  const [website, setWebsite] = useState<string | null>(null);
   const [purchaseType, setPurchaseType] = useState<string>("");
   const [shareCount, setShareCount] = useState<number>(0);
   const [sharePrice, setSharePrice] = useState<number | null>(null);
@@ -39,6 +40,7 @@ const TradeMenu: FC = ({ setDisplayTradeMenu }) => {
         setStockSymbol(data.stock_symbol);
         setSharePrice(data.current_price);
         setCompanyName(data.company_name);
+        setWebsite(data.website);
       } else {
         setSearchResult({ error: response.statusText })
         console.error("API ERROR:", response.statusText);
@@ -146,6 +148,7 @@ const TradeMenu: FC = ({ setDisplayTradeMenu }) => {
       {/* Render search results */}
       {searchResult && !searchResult.error && (
         <div className="stockInfo">
+          <img src={"https://logo.clearbit.com/"+website} alt="CompanyLogo" style={{ width: "300px", height: "auto" }} />
           <p className="companyName">{searchResult.company_name}</p>
           <div className="stockStats">
             <p className="price">${searchResult.current_price}</p>

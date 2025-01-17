@@ -17,6 +17,7 @@ password = os.getenv('PASSWORD')
 host = os.getenv('HOST')
 port = os.getenv('PORT')
 database = os.getenv('DATABASE')
+openai_api_key = os.getenv('OPENAI_API_KEY')
 
 # Database connection setup
 def get_db_connection():
@@ -41,6 +42,8 @@ def search_stock():
 
         stock_symbol = stock.info.get("symbol")
         company_name = stock.info.get("longName", "N/A")
+        website = stock.info.get("website")
+        print("WEBSITE:", website)
 
         current_price = stock.history(period="1d")["Close"].iloc[0]
         current_price = round(current_price, 2)
@@ -52,7 +55,7 @@ def search_stock():
         daily_percentage_change = round(daily_percentage_change, 2)
         daily_percentage_change_str = f"{daily_percentage_change:.2f}"
 
-        return jsonify({"stock_symbol": stock_symbol, "company_name": company_name, "current_price": current_price_str, "daily_percentage_change": daily_percentage_change_str})
+        return jsonify({"stock_symbol": stock_symbol, "company_name": company_name, "current_price": current_price_str, "daily_percentage_change": daily_percentage_change_str, "website": website})
     except:
         print("Stock for symbol", stock_symbol, "not found.")
         return jsonify({"error": "Stock not found"}), 500
@@ -159,6 +162,32 @@ def get_portfolio_value():
         print("Error retrieving total portfolio value")
         return jsonify({"error": "Cannot retrieve total portfolio value"}), 500
     
+# Retrieve transcation history
+@app.route('/order_history', methods=['GET'])
+def get_order_history():
+    user_id = request.args.get("user_id")
+    try:
+        order_history_query = '''
+            SELECT stock, purchase_type, share_count, price
+            FROM order_history
+            WHERE user_id=%s
+        '''
+        params=(user_id)
+
+        # retrieve from database
+        conn = get_db_connection()
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        cur.execute(order_history_query, params)
+        order_history = cur.fetchall()
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return jsonify(order_history)
+    except:
+        print("Error retrieving order history")
+        return jsonify({"error": "Cannot retrieve order history"}), 500
+    
 # Retrieve historical data
 @app.route("/historical_data", methods=['GET'])
 def get_historical_data():
@@ -174,6 +203,47 @@ def get_historical_data():
     except:
         print("Error retrieving historical data")
         return jsonify({"error": "Cannot retrieve historical data"}), 500
+
+# good, bad, suggestion
+@app.route("/stock_analysis", methods=['GET'])
+def get_stock_analysis():
+    # Provide one sentence about the good things about my stock portfolio. Provide one sentence about the bad things about my stock portfolio. Provide one sentence about the suggestions on stock tickers to buy or sell.
+    user_id = request.args.get("user_id")
+
+    try:
+        response = requests.get('http://127.0.0.1:5000/owned_stocks?user_id=' + user_id)
+
+        if response.status_code == 200:
+            # get list of owned stocks
+            owned_stocks = response.json()
+
+            # prompt ChatGPT
+            prompt = "Provide one sentence about the good things about my stock portfolio. Provide one sentence about the bad things about my stock portfolio. Provide one sentence about the suggestions on stock tickers to buy or sell."  \
+            + str(owned_stocks)
+
+            endpoint = "https://api.openai.com/v1/chat/completions"
+            headers = {
+                "Authorization": f"Bearer {openai_api_key}",
+                "Content-Type": "application/json"
+            }
+
+            data = {
+                "model": "gpt-4",
+                "messages": [
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": prompt}
+                ],
+                "max_tokens": 300
+            }
+
+            response = requests.post(endpoint, headers=headers, json=data)
+            result = response.json()
+            print("Response:", result["choices"][0]["message"]["content"])
+
+            return jsonify({"analysis": result["choices"][0]["message"]["content"]})
+    except:
+        print("Error retrieving stock analysis")
+        return jsonify({"error": "Cannot retrieve stock analysis"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
