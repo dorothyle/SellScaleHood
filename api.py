@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app, origins="*")
 
 # load env variables
-user = os.getenv('USERNAME')
+user = os.getenv('NAME')
 password = os.getenv('PASSWORD')
 host = os.getenv('HOST')
 port = os.getenv('PORT')
