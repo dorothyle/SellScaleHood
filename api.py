@@ -12,9 +12,9 @@ app = Flask(__name__)
 CORS(app, origins="*")
 
 # load env variables
-user = os.getenv('USERNAME')
+user = os.getenv('NAME')
 password = os.getenv('PASSWORD')
-host = os.getenv('HOST')
+host = os.getenv('HOSTNAME')
 port = os.getenv('PORT')
 database = os.getenv('DATABASE')
 openai_api_key = os.getenv('OPENAI_API_KEY')
