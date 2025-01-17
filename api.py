@@ -14,7 +14,7 @@ CORS(app, origins="*")
 # load env variables
 user = os.getenv('NAME')
 password = os.getenv('PASSWORD')
-host = os.getenv('HOST')
+host = os.getenv('HOSTNAME')
 port = os.getenv('PORT')
 database = os.getenv('DATABASE')
 
